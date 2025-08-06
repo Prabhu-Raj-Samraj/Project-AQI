@@ -1,0 +1,399 @@
+<!-- FIXED Prediction Page HTML - All IDs match the JavaScript expectations -->
+<div class="pred-container">
+    <!-- Header Section with Controls -->
+    <div class="pred-header-section">
+        <div class="pred-header-content">
+            <h1>AQI Prediction Forecast</h1>
+            <p>Advanced AI models for accurate air quality forecasting in Calgary, AB</p>
+        </div>
+
+        <!-- Date and Model Controls -->
+        <div class="pred-controls-section">
+            <!-- Date Picker -->
+            <div class="pred-date-picker-container">
+                <div class="pred-date-picker-trigger" id="predictionDateTrigger">
+                    <span class="pred-selected-date" id="selectedPredictionDate">Today</span>
+                    <svg class="pred-date-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                </div>
+                
+                <div class="pred-calendar-popup" id="predictionCalendarPopup">
+                    <div class="pred-calendar-header">
+                        <button class="pred-calendar-nav-btn" id="predictionPrevBtn">‹</button>
+                        <span class="pred-calendar-title" id="predictionCalendarTitle">Loading...</span>
+                        <button class="pred-calendar-nav-btn" id="predictionNextBtn">›</button>
+                    </div>
+                    
+                    <div class="pred-calendar-grid" id="predictionCalendarGrid">
+                        <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #6b7280;">
+                            Loading calendar...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Dropdown -->
+            <div class="pred-model-dropdown-container">
+                <div class="pred-model-dropdown-trigger" id="predictionModelTrigger">
+                    <span class="pred-selected-model" id="selectedPredictionModel">Select Model</span>
+                    <svg class="pred-model-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                </div>
+                
+                <div class="pred-model-dropdown-menu" id="predictionModelMenu">
+                    <div class="pred-model-option selected prediction-model-option" data-value="gradient_boosting">
+                        <div class="pred-model-name prediction-model-name">Gradient Boosting</div>
+                        <div class="pred-model-accuracy">R² Score: 84.9% • MAE: 8.2</div>
+                    </div>
+                    <div class="pred-model-option prediction-model-option" data-value="xgboost">
+                        <div class="pred-model-name prediction-model-name">XGBoost</div>
+                        <div class="pred-model-accuracy">R² Score: 83.0% • MAE: 9.1</div>
+                    </div>
+                    <div class="pred-model-option prediction-model-option" data-value="random_forest">
+                        <div class="pred-model-name prediction-model-name">Random Forest</div>
+                        <div class="pred-model-accuracy">R² Score: 80.1% • MAE: 10.8</div>
+                    </div>
+                    <div class="pred-model-option prediction-model-option" data-value="lstm">
+                        <div class="pred-model-name prediction-model-name">LSTM Neural Network</div>
+                        <div class="pred-model-accuracy">R² Score: 60.3% • MAE: 14.5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Card -->
+    <div class="pred-kpi-card">
+        <div class="pred-kpi-header">
+            <div>
+                <div class="pred-kpi-title">AQI Prediction for Calgary</div>
+                <div class="pred-kpi-subtitle" id="predKpiSubtitle">Loading live forecast...</div>
+            </div>
+            <div class="pred-kpi-date-badge" id="predKpiDateBadge">Today</div>
+        </div>
+
+        <div class="pred-kpi-main-content">
+            <div class="pred-aqi-display">
+                <div class="pred-aqi-value pred-aqi-loading" id="kpiAqiValue">--</div>
+                <div class="pred-aqi-level" id="kpiAqiLevel">Loading...</div>
+                <div class="pred-aqi-confidence" id="kpiAqiConfidence">Confidence: --%</div>
+            </div>
+
+            <div class="pred-aqi-visual">
+                <div class="pred-aqi-gauge" id="predAqiGauge">
+                    <div class="pred-aqi-needle" id="aqiNeedle" style="transform: rotate(0deg);"></div>
+                    <div class="pred-aqi-gauge-center"></div>
+                </div>
+                <div class="pred-aqi-trend-indicator">
+                    <span class="pred-trend-arrow pred-trend-stable" id="trendArrow">↻</span>
+                    <span id="trendText">Loading trend...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Performance -->
+        <div class="pred-model-performance">
+            <div class="pred-performance-header">
+                <div class="pred-performance-title">Model Performance</div>
+                <div class="pred-model-badge" id="modelBadge">Loading...</div>
+            </div>
+            
+            <div class="pred-performance-grid">
+                <div class="pred-performance-metric">
+                    <div class="pred-metric-value" id="accuracyValue">--%</div>
+                    <div class="pred-metric-label">R² Score</div>
+                    <div class="pred-performance-bar">
+                        <div class="pred-performance-fill" id="accuracyBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="pred-performance-metric">
+                    <div class="pred-metric-value" id="maeValue">--</div>
+                    <div class="pred-metric-label">MAE</div>
+                    <div class="pred-performance-bar">
+                        <div class="pred-performance-fill" id="maeBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="pred-performance-metric">
+                    <div class="pred-metric-value" id="rmseValue">--</div>
+                    <div class="pred-metric-label">RMSE</div>
+                    <div class="pred-performance-bar">
+                        <div class="pred-performance-fill" id="rmseBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="pred-performance-metric">
+                    <div class="pred-metric-value" id="mapeValue">--%</div>
+                    <div class="pred-metric-label">MAPE</div>
+                    <div class="pred-performance-bar">
+                        <div class="pred-performance-fill" id="mapeBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pred-kpi-actions">
+                <button class="pred-kpi-action-btn pred-alert-btn" id="alertToggle">
+                    <span>🔔</span> Alerts
+                </button>
+                <button class="pred-kpi-action-btn" onclick="exportPrediction()">
+                    <span>📄</span> Export
+                </button>
+                <button class="pred-kpi-action-btn" onclick="sharePrediction()">
+                    <span>📤</span> Share
+                </button>
+                <button class="pred-kpi-action-btn" onclick="showRecommendations()">
+                    <span>💡</span> Calgary Advice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="pred-charts-section">
+        <div class="pred-charts-header">
+            <h2 class="pred-charts-title">Live Prediction Analysis</h2>
+            <div class="pred-time-filters">
+                <button class="pred-time-filter-btn" data-period="hourly">24 Hours</button>
+                <button class="pred-time-filter-btn active" data-period="daily">7 Days</button>
+                <button class="pred-time-filter-btn" data-period="weekly">4 Weeks</button>
+                <button class="pred-time-filter-btn" data-period="monthly">3 Months</button>
+            </div>
+        </div>
+
+        <div class="pred-charts-grid">
+            <div class="pred-chart-card">
+                <h3>AQI Prediction Trend</h3>
+                <div class="pred-chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="pred-chart-card">
+                <h3>Model Performance Comparison</h3>
+                <div class="pred-chart-container">
+                    <canvas id="modelComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <div class="pred-chart-card">
+                <h3>Seasonal Pattern Analysis</h3>
+                <div class="pred-chart-container">
+                    <canvas id="seasonalChart"></canvas>
+                </div>
+            </div>
+
+            <div class="pred-chart-card">
+                <h3>Real-time Performance</h3>
+                <div class="pred-chart-container">
+                    <canvas id="accuracyTrackingChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ML Insights Section -->
+    <div class="pred-ml-insights-section">
+        <h2 class="pred-charts-title" style="margin-bottom: 1.5rem;">Machine Learning Insights</h2>
+        
+        <div class="pred-insights-grid">
+            <div class="pred-insight-card">
+                <div class="pred-insight-header">
+                    <div class="pred-insight-icon">🎯</div>
+                    <div class="pred-insight-title">Prediction Factors</div>
+                </div>
+                <ul class="pred-feature-importance-list" id="featureImportanceList">
+                    <li style="text-align: center; padding: 20px; color: #6b7280;">
+                        Loading prediction factors...
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pred-insight-card">
+                <div class="pred-insight-header">
+                    <div class="pred-insight-icon">📊</div>
+                    <div class="pred-insight-title">Prediction Confidence</div>
+                </div>
+                <div class="pred-confidence-breakdown" id="confidenceBreakdown">
+                    <div style="text-align: center; padding: 20px; color: #6b7280;">
+                        Loading confidence metrics...
+                    </div>
+                </div>
+            </div>
+
+            <div class="pred-insight-card">
+                <div class="pred-insight-header">
+                    <div class="pred-insight-icon">🧠</div>
+                    <div class="pred-insight-title">AI Prediction Explanation</div>
+                </div>
+                <div class="pred-prediction-explanation" id="predictionExplanation">
+                    Loading AI explanation for current prediction...
+                </div>
+            </div>
+
+            <div class="pred-insight-card">
+                <div class="pred-insight-header">
+                    <div class="pred-insight-icon">🏔️</div>
+                    <div class="pred-insight-title">Calgary Context</div>
+                </div>
+                <div class="pred-prediction-explanation">
+                    <strong>Local Factors:</strong> Predictions consider Calgary's unique geography including Chinook winds, proximity to the Rocky Mountains, seasonal weather patterns, and urban density. The model accounts for local emission sources and meteorological conditions specific to Southern Alberta.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Data Status -->
+    <div style="margin-top: 2rem; text-align: center; padding: 1rem; background: #f0fdf4; border-radius: 12px; border: 2px solid #bbf7d0;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <div id="predLiveDataIndicator" style="width: 12px; height: 12px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite;"></div>
+            <span style="color: #166534; font-weight: 600;">Live Prediction System Active</span>
+            <span id="predLastUpdate" style="color: #059669; font-size: 14px;">Calgary, AB - Mountain Time</span>
+        </div>
+    </div>
+</div>
+
+<!-- Alert Popup - HIDDEN BY DEFAULT -->
+<div class="alert-overlay" id="alertOverlay" style="display: none;">
+    <div class="alert-popup">
+        <div class="alert-popup-icon">🔔</div>
+        <h3>Calgary AQI Alert System</h3>
+        <p>Get real-time notifications when air quality predictions for Calgary exceed your threshold.</p>
+        <div class="alert-popup-actions">
+            <button class="alert-popup-btn primary" onclick="enablePredictionAlerts()">Enable Calgary Alerts</button>
+            <button class="alert-popup-btn secondary" onclick="closePredictionAlertPopup()">Maybe Later</button>
+        </div>
+    </div>
+</div>
+
+<!-- Recommendation Popup - HIDDEN BY DEFAULT -->
+<div class="alert-overlay" id="recommendationOverlay" style="display: none;">
+    <div class="alert-popup">
+        <div class="alert-popup-icon">💡</div>
+        <h3>Calgary Health Recommendations</h3>
+        <p id="recommendationText">Based on current predictions for Calgary, here's what we recommend...</p>
+        <div class="alert-popup-actions">
+            <button class="alert-popup-btn primary" onclick="closePredictionRecommendationPopup()">Got it!</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize prediction interface when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔮 Prediction page loaded, initializing...');
+    
+    // Delay initialization to ensure all scripts are loaded
+    setTimeout(() => {
+        if (typeof initPrediction === 'function') {
+            console.log('📊 Starting prediction initialization...');
+            initPrediction();
+        } else if (typeof window.initPrediction === 'function') {
+            console.log('📊 Starting global prediction initialization...');
+            window.initPrediction();
+        } else {
+            console.error('❌ Prediction initialization function not found!');
+            // Create fallback display
+            document.querySelector('.pred-aqi-value').textContent = '45';
+            document.querySelector('.pred-aqi-level').textContent = 'Good';
+            document.querySelector('.pred-kpi-subtitle').textContent = 'Fallback mode - API connection issues';
+        }
+    }, 500);
+});
+</script>
+
+<style>
+/* Alert popup styles */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.alert-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.alert-popup {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.alert-overlay.show .alert-popup {
+    transform: scale(1);
+}
+
+.alert-popup-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.alert-popup h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.alert-popup p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.alert-popup-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.alert-popup-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.alert-popup-btn.primary {
+    background: #e1fddc;
+    color: #1f2937;
+    border: 2px solid #cbf0c4;
+}
+
+.alert-popup-btn.primary:hover {
+    background: #cbf0c4;
+    transform: translateY(-1px);
+}
+
+.alert-popup-btn.secondary {
+    background: #f8fafc;
+    color: #6b7280;
+    border: 2px solid #e2e8f0;
+}
+
+.alert-popup-btn.secondary:hover {
+    background: #e2e8f0;
+    color: #374151;
+}
+</style>
