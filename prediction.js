@@ -5,7 +5,17 @@
 
 class WorkingPredictionInterface {
     constructor() {
-        this.API_BASE_URL = "http://127.0.0.1:5000/api";
+        this.API_BASE_URL = (() => {
+            const override = window.API_BASE_URL_OVERRIDE;
+            if (override && typeof override === 'string') {
+                return override.replace(/\/$/, '');
+            }
+            const { protocol, hostname } = window.location;
+            if (protocol === 'file:' || hostname === 'localhost' || hostname === '127.0.0.1') {
+                return 'http://127.0.0.1:5000/api';
+            }
+            return '/api';
+        })();
         this.currentCalendarDate = new Date();
         this.selectedDate = new Date();
         this.selectedModel = 'gradient_boosting';

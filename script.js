@@ -3,7 +3,20 @@
 // Core Application Logic & Navigation
 // ===================================
 
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = (() => {
+    const meta = document.querySelector('meta[name="api-base-url"]');
+    const metaContent = meta ? meta.getAttribute('content') : null;
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('API_BASE_URL') : null;
+    const override = window.API_BASE_URL_OVERRIDE || stored || metaContent;
+    if (override && typeof override === 'string') {
+        return override.replace(/\/$/, '');
+    }
+    const { protocol, hostname } = window.location;
+    if (protocol === 'file:' || hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:5000/api';
+    }
+    return '/api';
+})();
 
 // ===================================
 // GLOBAL DATE MANAGEMENT SYSTEM
